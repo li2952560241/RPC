@@ -8,8 +8,14 @@ import io.vertx.core.Vertx;
  * 描述：用vertx实现http服务
  * @date 2025/6/28 上午11:34
  */
+
 public class VertxHttpServer implements HttpServer {
 
+    /**
+     * 启动服务器
+     *
+     * @param port
+     */
     public void doStart(int port) {
         // 创建 Vert.x 实例
         Vertx vertx = Vertx.vertx();
@@ -18,16 +24,7 @@ public class VertxHttpServer implements HttpServer {
         io.vertx.core.http.HttpServer server = vertx.createHttpServer();
 
         // 监听端口并处理请求
-        server.requestHandler(request -> {
-            // 处理 HTTP 请求
-            //TODO 这个日志可以用日志框架来记录
-            System.out.println("Received request: " + request.method() + " " + request.uri());
-
-            // 发送 HTTP 响应
-            request.response()
-                    .putHeader("content-type", "text/plain")
-                    .end("Hello from Vert.x HTTP server!");
-        });
+        server.requestHandler(new HttpServerHandler());
 
         // 启动 HTTP 服务器并监听指定端口
         server.listen(port, result -> {
