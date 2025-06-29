@@ -16,9 +16,14 @@
 
     <dependencies>
 
+<!--        <dependency>-->
+<!--            <groupId>com.dysf</groupId>-->
+<!--            <artifactId>rpc-easy</artifactId>-->
+<!--            <version>1.0-SNAPSHOT</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.dysf</groupId>
-            <artifactId>rpc-easy</artifactId>
+            <artifactId>rpc-core</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
