@@ -57,7 +57,7 @@ RPC需要做的就是将请求的转化进行隐藏。
 
 ## 二、RPC简易版
 
-#### 1.初始化项目
+#### 1、初始化项目
 
 在RPC项目下新建一个基本的Meven模块
 
@@ -72,3 +72,250 @@ RPC需要做的就是将请求的转化进行隐藏。
 
 公共模块需‏要同时被消费者和服﻿务提供者引入，主要﻿是编写和服务相关的‌接口和数据模型。
 
+![image-20250629112030255](RPC.assets/image-20250629112030255.png)
+
+用户类
+
+```java
+package com.TWTW.example.common.model;
+
+import java.io.Serializable;
+
+/**
+ * @author TWTW
+ * @version 1.0
+ * 描述：公共模块的User 类 用来进行消息的传递所以需要序列化
+ * @date 2025/6/28 上午11:17
+ */
+
+public class User implements Serializable {
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+
+```
+
+用户接口类
+
+```java
+package com.TWTW.example.common.service;
+
+import com.TWTW.example.common.model.User;
+
+/**
+ * @author TWTW
+ * @version 1.0
+ * 描述：用户接口类
+ * @date 2025/6/28 上午11:19
+ */
+public interface UserService {
+    /**
+     * 获取用户
+     *
+     * @param user
+     * @return
+     */
+    User getUser(User user) ;
+}
+
+```
+
+#### 3、服务提供
+
+![image-20250629112247387](RPC.assets/image-20250629112247387.png)
+
+添加相关的依赖
+
+```xml
+ <dependencies>
+     <dependency>
+         <groupId>com.dysf</groupId>
+         <artifactId>rpc-easy</artifactId>
+         <version>1.0-SNAPSHOT</version>
+     </dependency>
+     <dependency>
+         <groupId>com.dysf</groupId>
+         <artifactId>example-common</artifactId>
+         <version>1.0-SNAPSHOT</version>
+     </dependency>
+     <!-- https://doc.hutool.cn/ -->
+     <dependency>
+         <groupId>cn.hutool</groupId>
+         <artifactId>hutool-all</artifactId>
+         <version>5.8.16</version>
+     </dependency>
+     <!-- https://projectlombok.org/ -->
+     <dependency>
+         <groupId>org.projectlombok</groupId>
+         <artifactId>lombok</artifactId>
+         <version>1.18.30</version>
+         <scope>provided</scope>
+     </dependency>
+
+     <!-- https://mvnrepository.com/artifact/io.vertx/vertx-core -->
+     <dependency>
+         <groupId>io.vertx</groupId>
+         <artifactId>vertx-core</artifactId>
+         <version>4.5.1</version>
+     </dependency>
+</dependencies>
+```
+
+用户服务实现类
+
+```java
+package com.TWTW.example.provider;
+
+import com.TWTW.example.common.model.User;
+import com.TWTW.example.common.service.UserService;
+
+/**
+ * @author TWTW
+ * @version 1.0
+ * 描述：用户服务实现类
+ * @date 2025/6/28 上午11:24
+ */
+public class UserServiceImpl implements UserService {
+    public User getUser(User user) {
+        System.out.println("用户名：" + user.getName());
+        return user;
+    }
+}
+
+```
+
+简易服务提供者示例
+
+```java
+package com.TWTW.example.provider;
+
+import com.TWTW.example.common.service.UserService;
+import com.TWTW.rpc.registry.LocalRegistry;
+import com.TWTW.rpc.server.HttpServer;
+import com.TWTW.rpc.server.VertxHttpServer;
+
+/**
+ * @author TWTW
+ * @version 1.0
+ * 描述：简易服务提供者示例
+ * @date 2025/6/28 上午11:26
+ */
+
+public class EasyProviderExample {
+
+    public static void main(String[] args) {
+        // 注册服务
+        LocalRegistry.register(UserService.class.getName(), UserServiceImpl.class);
+
+        // 启动 web 服务
+        HttpServer httpServer = new VertxHttpServer();
+        httpServer.doStart(8080);
+    }
+}
+```
+
+#### 4、服务消费
+
+![image-20250629112648834](RPC.assets/image-20250629112648834.png)
+
+添加相关依赖
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>com.dysf</groupId>
+        <artifactId>rpc-easy</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+        <groupId>com.dysf</groupId>
+        <artifactId>example-common</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <!-- https://doc.hutool.cn/ -->
+    <dependency>
+        <groupId>cn.hutool</groupId>
+        <artifactId>hutool-all</artifactId>
+        <version>5.8.16</version>
+    </dependency>
+    <!-- https://projectlombok.org/ -->
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>1.18.30</version>
+        <scope>provided</scope>
+    </dependency>
+</dependencies>
+```
+
+简易服务消费者示例
+
+```java
+package com.TWTW.example.consumer;
+
+import com.TWTW.example.common.model.User;
+import com.TWTW.example.common.service.UserService;
+import com.TWTW.rpc.proxy.ServiceProxyFactory;
+
+/**
+ * @author TWTW
+ * @version 1.0
+ * 描述：简易服务消费者示例
+ * @date 2025/6/28 上午11:29
+ */
+
+public class EasyConsumerExample {
+
+    public static void main(String[] args) {
+        // 动态代理
+        UserService userService = ServiceProxyFactory.getProxy(UserService.class);
+
+        User user = new User();
+        user.setName("TWTW");
+        // 调用
+        User newUser = userService.getUser(user);
+        if (newUser != null) {
+            System.out.println(newUser.getName());
+        } else {
+            System.out.println("user == null");
+        }
+    }
+}
+```
+
+#### 5、RPC
+
+![image-20250629112922398](RPC.assets/image-20250629112922398.png)
+
+引入相关依赖
+
+```xml
+<dependencies>
+    <!-- https://mvnrepository.com/artifact/io.vertx/vertx-core -->
+    <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-core</artifactId>
+        <version>4.5.1</version>
+    </dependency>
+    <!-- https://doc.hutool.cn/ -->
+    <dependency>
+        <groupId>cn.hutool</groupId>
+        <artifactId>hutool-all</artifactId>
+        <version>5.8.16</version>
+    </dependency>
+    <!-- https://projectlombok.org/ -->
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>1.18.30</version>
+        <scope>provided</scope>
+    </dependency>
+</dependencies>
+```

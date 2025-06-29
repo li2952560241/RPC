@@ -2,6 +2,7 @@ package com.TWTW.example.consumer;
 
 import com.TWTW.example.common.model.User;
 import com.TWTW.example.common.service.UserService;
+import com.TWTW.rpc.proxy.ServiceProxyFactory;
 
 /**
  * @author TWTW
@@ -13,10 +14,11 @@ import com.TWTW.example.common.service.UserService;
 public class EasyConsumerExample {
 
     public static void main(String[] args) {
-        // todo 需要获取 UserService 的实现类对象
-        UserService userService = null;
+        // 动态代理
+        UserService userService = ServiceProxyFactory.getProxy(UserService.class);
+
         User user = new User();
-        user.setName("yupi");
+        user.setName("TWTW");
         // 调用
         User newUser = userService.getUser(user);
         if (newUser != null) {
