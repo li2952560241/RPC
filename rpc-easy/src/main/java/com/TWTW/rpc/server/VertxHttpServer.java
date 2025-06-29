@@ -16,6 +16,7 @@ public class VertxHttpServer implements HttpServer {
      *
      * @param port
      */
+    @Override
     public void doStart(int port) {
         // 创建 Vert.x 实例
         Vertx vertx = Vertx.vertx();
