@@ -1,0 +1,4 @@
+failBack=com.TWTW.rpc.fault.tolerant.FailBackTolerantStrategy
+failFast=com.TWTW.rpc.fault.tolerant.FailFastTolerantStrategy
+failOver=com.TWTW.rpc.fault.tolerant.FailOverTolerantStrategy
+failSafe=com.TWTW.rpc.fault.tolerant.FailSafeTolerantStrategy

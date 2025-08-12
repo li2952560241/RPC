@@ -1,0 +1,4 @@
+jdk=com.TWTW.rpc.serializer.JdkSerializer
+hessian=com.TWTW.rpc.serializer.HessianSerializer
+json=com.TWTW.rpc.serializer.JsonSerializer
+kryo=com.TWTW.rpc.serializer.KryoSerializer

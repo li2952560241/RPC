@@ -1,0 +1,3 @@
+roundRobin=com.TWTW.rpc.loadbalancer.RoundRobinLoadBalancer
+random=com.TWTW.rpc.loadbalancer.RandomLoadBalancer
+consistentHash=com.TWTW.rpc.loadbalancer.ConsistentHashLoadBalancer

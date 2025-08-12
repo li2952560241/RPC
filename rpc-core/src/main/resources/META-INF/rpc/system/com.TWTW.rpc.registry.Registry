@@ -1,0 +1,2 @@
+etcd=com.TWTW.rpc.registry.EtcdRegistry
+zookeeper=com.TWTW.rpc.registry.ZooKeeperRegistry

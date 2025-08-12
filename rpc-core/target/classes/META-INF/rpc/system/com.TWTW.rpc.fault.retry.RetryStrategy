@@ -1,0 +1,2 @@
+no=com.TWTW.rpc.fault.retry.NoRetryStrategy
+fixedInterval=com.TWTW.rpc.fault.retry.FixedIntervalRetryStrategy
