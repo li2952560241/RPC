@@ -8,7 +8,7 @@ import com.TWTW.rpc.server.HttpServer;
 import com.TWTW.rpc.server.VertxHttpServer;
 
 /**
- * 简易服务提供者示例
+ * 服务提供者示例
  */
 public class ProviderExample {
 

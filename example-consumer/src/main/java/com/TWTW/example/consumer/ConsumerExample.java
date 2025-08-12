@@ -7,7 +7,7 @@ import com.TWTW.rpc.proxy.ServiceProxyFactory;
 import com.TWTW.rpc.utils.ConfigUtils;
 
 /**
- * 简易服务消费者示例
+ * 服务消费者示例
  *
  */
 public class ConsumerExample {

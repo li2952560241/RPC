@@ -2,10 +2,12 @@ package com.TWTW.rpc.proxy;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import com.TWTW.rpc.RpcApplication;
 import com.TWTW.rpc.model.RpcRequest;
 import com.TWTW.rpc.model.RpcResponse;
 import com.TWTW.rpc.serializer.JdkSerializer;
 import com.TWTW.rpc.serializer.Serializer;
+import com.TWTW.rpc.serializer.SerializerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
@@ -29,7 +31,7 @@ public class ServiceProxy implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         // 指定序列化器
-        Serializer serializer = new JdkSerializer();
+        final Serializer serializer = SerializerFactory.getInstance(RpcApplication.getRpcConfig().getSerializer());
 
         // 构造请求
         RpcRequest rpcRequest = RpcRequest.builder()
