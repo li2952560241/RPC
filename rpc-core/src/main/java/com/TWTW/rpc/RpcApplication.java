@@ -1,7 +1,10 @@
 package com.TWTW.rpc;
 
+import com.TWTW.rpc.config.RegistryConfig;
 import com.TWTW.rpc.config.RpcConfig;
 import com.TWTW.rpc.constant.RpcConstant;
+import com.TWTW.rpc.registry.Registry;
+import com.TWTW.rpc.registry.RegistryFactory;
 import com.TWTW.rpc.utils.ConfigUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,7 +29,13 @@ public class RpcApplication {
     public static void init(RpcConfig newRpcConfig) {
         rpcConfig = newRpcConfig;
         log.info("rpc init, config = {}", newRpcConfig.toString());
+        // 注册中心初始化
+        RegistryConfig registryConfig = rpcConfig.getRegistryConfig();
+        Registry registry = RegistryFactory.getInstance(registryConfig.getRegistry());
+        registry.init(registryConfig);
+        log.info("registry init, config = {}", registryConfig);
     }
+
 
     /**
      * 初始化

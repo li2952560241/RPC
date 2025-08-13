@@ -1,10 +1,16 @@
 package com.TWTW.rpc.proxy;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.TWTW.rpc.RpcApplication;
+import com.TWTW.rpc.config.RpcConfig;
+import com.TWTW.rpc.constant.RpcConstant;
 import com.TWTW.rpc.model.RpcRequest;
 import com.TWTW.rpc.model.RpcResponse;
+import com.TWTW.rpc.model.ServiceMetaInfo;
+import com.TWTW.rpc.registry.Registry;
+import com.TWTW.rpc.registry.RegistryFactory;
 import com.TWTW.rpc.serializer.JdkSerializer;
 import com.TWTW.rpc.serializer.Serializer;
 import com.TWTW.rpc.serializer.SerializerFactory;
@@ -12,6 +18,7 @@ import com.TWTW.rpc.serializer.SerializerFactory;
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * @author TWTW
@@ -19,6 +26,7 @@ import java.lang.reflect.Method;
  * 描述：服务代理（JDK 动态代理）
  * @date 2025/6/28 下午1:25
  */
+
 
 public class ServiceProxy implements InvocationHandler {
 
@@ -34,8 +42,9 @@ public class ServiceProxy implements InvocationHandler {
         final Serializer serializer = SerializerFactory.getInstance(RpcApplication.getRpcConfig().getSerializer());
 
         // 构造请求
+        String serviceName = method.getDeclaringClass().getName();
         RpcRequest rpcRequest = RpcRequest.builder()
-                .serviceName(method.getDeclaringClass().getName())
+                .serviceName(serviceName)
                 .methodName(method.getName())
                 .parameterTypes(method.getParameterTypes())
                 .args(args)
@@ -43,9 +52,21 @@ public class ServiceProxy implements InvocationHandler {
         try {
             // 序列化
             byte[] bodyBytes = serializer.serialize(rpcRequest);
+
+            // 从注册中心获取服务提供者请求地址
+            RpcConfig rpcConfig = RpcApplication.getRpcConfig();
+            Registry registry = RegistryFactory.getInstance(rpcConfig.getRegistryConfig().getRegistry());
+            ServiceMetaInfo serviceMetaInfo = new ServiceMetaInfo();
+            serviceMetaInfo.setServiceName(serviceName);
+            serviceMetaInfo.setServiceVersion(RpcConstant.DEFAULT_SERVICE_VERSION);
+            List<ServiceMetaInfo> serviceMetaInfoList = registry.serviceDiscovery(serviceMetaInfo.getServiceKey());
+            if (CollUtil.isEmpty(serviceMetaInfoList)) {
+                throw new RuntimeException("暂无服务地址");
+            }
+            ServiceMetaInfo selectedServiceMetaInfo = serviceMetaInfoList.get(0);
+
             // 发送请求
-            // todo 注意，这里地址被硬编码了（需要使用注册中心和服务发现机制解决）
-            try (HttpResponse httpResponse = HttpRequest.post("http://localhost:8080")
+            try (HttpResponse httpResponse = HttpRequest.post(selectedServiceMetaInfo.getServiceAddress())
                     .body(bodyBytes)
                     .execute()) {
                 byte[] result = httpResponse.bodyBytes();
@@ -60,4 +81,3 @@ public class ServiceProxy implements InvocationHandler {
         return null;
     }
 }
-
