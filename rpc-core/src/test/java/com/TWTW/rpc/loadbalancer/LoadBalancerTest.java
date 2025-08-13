@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
  */
 public class LoadBalancerTest {
 
-    final LoadBalancer loadBalancer = new ConsistentHashLoadBalancer();
+    final LoadBalancer loadBalancer = new RoundRobinLoadBalancer();
 
     @Test
     public void select() {
