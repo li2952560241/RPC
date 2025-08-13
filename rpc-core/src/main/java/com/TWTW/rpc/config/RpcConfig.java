@@ -1,5 +1,6 @@
 package com.TWTW.rpc.config;
 
+import com.TWTW.rpc.loadbalancer.LoadBalancerKeys;
 import com.TWTW.rpc.serializer.SerializerKeys;
 import lombok.Data;
 
@@ -49,5 +50,9 @@ public class RpcConfig {
      */
     private RegistryConfig registryConfig = new RegistryConfig();
 
+    /**
+     * 负载均衡器
+     */
+    private String loadBalancer = LoadBalancerKeys.ROUND_ROBIN;
 }
 
