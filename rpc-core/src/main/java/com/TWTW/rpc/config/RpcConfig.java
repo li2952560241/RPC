@@ -1,5 +1,6 @@
 package com.TWTW.rpc.config;
 
+import com.TWTW.rpc.fault.retry.RetryStrategyKeys;
 import com.TWTW.rpc.loadbalancer.LoadBalancerKeys;
 import com.TWTW.rpc.serializer.SerializerKeys;
 import lombok.Data;
@@ -54,5 +55,12 @@ public class RpcConfig {
      * 负载均衡器
      */
     private String loadBalancer = LoadBalancerKeys.ROUND_ROBIN;
+
+    /**
+     * 重试策略
+     */
+    private String retryStrategy = RetryStrategyKeys.NO;
+
+
 }
 
