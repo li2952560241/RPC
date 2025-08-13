@@ -1,7 +1,5 @@
 package com.TWTW.rpc.proxy;
 
-import com.TWTW.rpc.RpcApplication;
-
 import java.lang.reflect.Proxy;
 
 /**
@@ -27,7 +25,7 @@ public class ServiceProxyFactory {
         return (T) Proxy.newProxyInstance(
                 serviceClass.getClassLoader(),
                 new Class[]{serviceClass},
-                new ServiceProxy());
+                new ServiceProxyHttp());
     }
 
     /**
