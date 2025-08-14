@@ -1,6 +1,7 @@
 package com.TWTW.rpc.config;
 
 import com.TWTW.rpc.fault.retry.RetryStrategyKeys;
+import com.TWTW.rpc.fault.tolerant.TolerantStrategyKeys;
 import com.TWTW.rpc.loadbalancer.LoadBalancerKeys;
 import com.TWTW.rpc.serializer.SerializerKeys;
 import lombok.Data;
@@ -61,6 +62,10 @@ public class RpcConfig {
      */
     private String retryStrategy = RetryStrategyKeys.NO;
 
+    /**
+     * 容错策略
+     */
+    private String tolerantStrategy = TolerantStrategyKeys.FAIL_FAST;
 
 }
 
